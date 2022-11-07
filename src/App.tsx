@@ -1,6 +1,7 @@
 import esbuild from "esbuild-wasm";
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
+import { fetchPlugin } from "./plugins/fetch-plugin";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 
 const App = () => {
@@ -38,7 +39,7 @@ const App = () => {
         "process.env.NODE_ENV": '"production"',
         global: "window",
       },
-      plugins: [unpkgPathPlugin(textRef.current!.value)],
+      plugins: [unpkgPathPlugin(), fetchPlugin(textRef.current!.value)],
     });
 
     setCode(result.outputFiles[0].text);
