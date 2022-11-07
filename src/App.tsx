@@ -38,7 +38,7 @@ const App = () => {
         "process.env.NODE_ENV": '"production"',
         global: "window",
       },
-      plugins: [unpkgPathPlugin()],
+      plugins: [unpkgPathPlugin(textRef.current!.value)],
     });
 
     setCode(result.outputFiles[0].text);
