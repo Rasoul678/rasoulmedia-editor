@@ -1,4 +1,4 @@
-import * as esbuild from "esbuild-wasm";
+import esbuild from "esbuild-wasm";
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";

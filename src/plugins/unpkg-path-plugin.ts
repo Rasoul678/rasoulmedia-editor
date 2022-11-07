@@ -1,11 +1,21 @@
-import * as esbuild from "esbuild-wasm";
+import {
+  OnLoadArgs,
+  OnLoadResult,
+  OnResolveArgs,
+  PluginBuild,
+} from "esbuild-wasm";
 import axios from "axios";
+import localForage from "localforage";
+
+const fileCache = localForage.createInstance({
+  name: "filecache",
+});
 
 export const unpkgPathPlugin = () => {
   return {
     name: "unpkg-path-plugin",
-    setup(build: esbuild.PluginBuild) {
-      build.onResolve({ filter: /.*/ }, (args: any) => {
+    setup(build: PluginBuild) {
+      build.onResolve({ filter: /.*/ }, (args: OnResolveArgs) => {
         if (args.path === "index.js") {
           return {
             path: args.path,
@@ -27,23 +37,33 @@ export const unpkgPathPlugin = () => {
         };
       });
 
-      build.onLoad({ filter: /.*/ }, async (args: any) => {
+      build.onLoad({ filter: /.*/ }, async (args: OnLoadArgs) => {
         if (args.path === "index.js") {
           return {
             contents: `
-                    import React from 'react';
-                `,
+              import React from 'react';
+            `,
             loader: "jsx",
           };
         }
 
+        const cachedResult = await fileCache.getItem<OnLoadResult>(args.path);
+
+        if (cachedResult) {
+          return cachedResult;
+        }
+
         const { data, request } = await axios.get(args.path);
 
-        return {
+        const result: OnLoadResult = {
           contents: data,
           loader: "jsx",
           resolveDir: new URL("./", request.responseURL).pathname,
         };
+
+        await fileCache.setItem(args.path, result);
+
+        return result;
       });
     },
   };
