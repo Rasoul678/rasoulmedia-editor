@@ -31,6 +31,8 @@ const App = () => {
   const handleClick = async () => {
     if (!serviceRef.current) return;
 
+    iframeRef.current!.srcdoc = html;
+
     const result = await esbuild.build({
       entryPoints: ["index.js"],
       bundle: true,
@@ -41,7 +43,6 @@ const App = () => {
       },
       plugins: [unpkgPathPlugin(), fetchPlugin(textRef.current!.value)],
     });
-
 
     iframeRef.current!.contentWindow!.postMessage(
       result.outputFiles[0].text,
@@ -62,7 +63,13 @@ const App = () => {
         <div id="root"></div>
         <script>
           window.addEventListener("message", (event) => {
-            eval(event.data);
+            try{
+              eval(event.data);
+            } catch(error){
+              const root = document.querySelector('#root');
+              root.innerHTML = '<div style="color: crimson;"><h4>Runtime Error:</h4>' + error + '</div>';
+              console.error(error);
+            }
           }, false);
         </script>
       </body>
@@ -78,7 +85,7 @@ const App = () => {
         </div>
         <iframe
           ref={iframeRef}
-          title={`code-sandbox-${id}`}
+          title={`preview-${id}`}
           sandbox="allow-scripts"
           srcDoc={html}
         />
