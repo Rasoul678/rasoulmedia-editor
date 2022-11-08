@@ -1,5 +1,5 @@
 import esbuild from "esbuild-wasm";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import "./App.css";
 import { fetchPlugin } from "./plugins/fetch-plugin";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
@@ -7,8 +7,8 @@ import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 const App = () => {
   const serviceRef = useRef(false);
   const textRef = useRef<HTMLTextAreaElement>(null);
-
-  const [code, setCode] = useState("");
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const id = useId();
 
   const startService = async () => {
     await esbuild.initialize({
@@ -42,8 +42,32 @@ const App = () => {
       plugins: [unpkgPathPlugin(), fetchPlugin(textRef.current!.value)],
     });
 
-    setCode(result.outputFiles[0].text);
+
+    iframeRef.current!.contentWindow!.postMessage(
+      result.outputFiles[0].text,
+      "*"
+    );
   };
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MeBox</title>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script>
+          window.addEventListener("message", (event) => {
+            eval(event.data);
+          }, false);
+        </script>
+      </body>
+    </html>
+  `;
 
   return (
     <div className="App">
@@ -52,7 +76,12 @@ const App = () => {
         <div>
           <button onClick={handleClick}>Submit</button>
         </div>
-        <pre>{code}</pre>
+        <iframe
+          ref={iframeRef}
+          title={`code-sandbox-${id}`}
+          sandbox="allow-scripts"
+          srcDoc={html}
+        />
       </header>
     </div>
   );
