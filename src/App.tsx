@@ -1,14 +1,23 @@
 import esbuild from "esbuild-wasm";
-import { useEffect, useId, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import "./App.css";
 import { fetchPlugin } from "./plugins/fetch-plugin";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
+import CodeEditor from "./components/code-editor";
 
 const App = () => {
   const serviceRef = useRef(false);
-  const textRef = useRef<HTMLTextAreaElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const id = useId();
+  const [input, setInput] = useState("");
+  const [_isPending, startTransition] = useTransition();
 
   const startService = async () => {
     await esbuild.initialize({
@@ -41,7 +50,7 @@ const App = () => {
         "process.env.NODE_ENV": '"production"',
         global: "window",
       },
-      plugins: [unpkgPathPlugin(), fetchPlugin(textRef.current!.value)],
+      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
     });
 
     iframeRef.current!.contentWindow!.postMessage(
@@ -76,10 +85,19 @@ const App = () => {
     </html>
   `;
 
+  const handleChangeEditor = useCallback((value: string) => {
+    startTransition(() => {
+      setInput(value);
+    });
+  }, []);
+
   return (
     <div className="App">
+      <CodeEditor
+        defaultValue="// Some comments"
+        onChange={handleChangeEditor}
+      />
       <header className="App-header">
-        <textarea ref={textRef} rows={15} cols={100}></textarea>
         <div>
           <button onClick={handleClick}>Submit</button>
         </div>
