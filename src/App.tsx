@@ -17,7 +17,7 @@ const App = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const id = useId();
   const [input, setInput] = useState("");
-  const [_isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const startService = async () => {
     await esbuild.initialize({
@@ -92,9 +92,20 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div>
       <CodeEditor
-        defaultValue="// Some comments"
+        defaultValue={
+          `// Some comments
+          import React from 'react';
+          import {createRoot} from 'react-dom';
+
+          const rootElement = document.querySelector('#root');
+          const root = createRoot(rootElement);
+
+          const App = () => <div>Hello World!</div>;
+
+          root.render(<App />);
+        `}
         onChange={handleChangeEditor}
       />
       <header className="App-header">

@@ -1,9 +1,14 @@
-import React, { PropsWithChildren, useRef } from "react";
+import "./editor-syntax.css";
+import editorStyle from "./code-editor.module.css";
+import React, { PropsWithChildren, useCallback, useRef } from "react";
 import MonacoEditor, { OnChange, OnMount } from "@monaco-editor/react";
 import monaco from "monaco-editor/esm/vs/editor/editor.api";
 import prettier from "prettier";
 import parser from "prettier/parser-babel";
-import editorStyle from "./code-editor.module.css";
+import {
+  MonacoJsxSyntaxHighlight,
+  getWorker,
+} from "monaco-jsx-syntax-highlight";
 
 interface IProps extends PropsWithChildren {
   defaultValue: string;
@@ -15,33 +20,74 @@ const CodeEditor: React.FC<IProps> = (props) => {
 
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
-  const handleEditorDidMount: OnMount = (editor) => {
-    editorRef.current = editor;
-  };
+  const handleEditorDidMount: OnMount = useCallback(
+    (editor, monaco) => {
+      editorRef.current = editor;
 
-  const handleEditorChange: OnChange = (value, _event) => {
-    if (value) {
-      onChange?.(value);
-    }
+      monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+        jsx: monaco.languages.typescript.JsxEmit.Preserve,
+        target: monaco.languages.typescript.ScriptTarget.ES2020,
+        esModuleInterop: true,
+        moduleResolution:
+          monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      });
+
+      const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
+        getWorker(),
+        monaco
+      );
+
+      const { highlighter, dispose } =
+        monacoJsxSyntaxHighlight.highlighterBuilder({
+          editor: editor,
+        });
+
+      //* init highlight
+      highlighter();
+      formatCode(defaultValue);
+
+      editor.onDidChangeModelContent(() => {
+        //* content change, highlight
+        highlighter();
+      });
+
+      return dispose;
+    },
+    [defaultValue]
+  );
+
+  const handleEditorChange: OnChange = useCallback(
+    (value, _event) => {
+      if (value) {
+        onChange?.(value);
+      }
+    },
+    [onChange]
+  );
+
+  const formatCode = (unformatted: string | undefined) => {
+    if (!unformatted) return;
+
+    //* format that value
+    const formatted = prettier
+      .format(unformatted, {
+        parser: "babel",
+        plugins: [parser],
+        useTabs: false,
+        singleQuote: false,
+        semi: true,
+      })
+      .replace(/\n$/, "");
+
+    //* Set formatted value back in the editor
+    editorRef.current?.setValue(formatted);
   };
 
   const onClickFormat = () => {
     //* Get current value from editor
     const unformatted = editorRef.current?.getValue();
 
-    if (unformatted) {
-      //* format that value
-      const formatted = prettier.format(unformatted, {
-        parser: "babel",
-        plugins: [parser],
-        useTabs: false,
-        singleQuote: false,
-        semi: true,
-      }).replace(/\n$/, '');
-
-      //* Set formatted value back in the editor
-      editorRef.current?.setValue(formatted);
-    }
+    formatCode(unformatted);
   };
 
   return (
@@ -53,8 +99,10 @@ const CodeEditor: React.FC<IProps> = (props) => {
         Format
       </button>
       <MonacoEditor
+        className={"editor"}
         height="80vh"
         language="javascript"
+        path={"file:///index.tsx"}
         theme="vs-dark"
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
@@ -64,13 +112,14 @@ const CodeEditor: React.FC<IProps> = (props) => {
           minimap: {
             enabled: false, //* Disable minimap
           },
-          showUnused: false, //* Don't fade unused statements
+          showUnused: true, //* Don't fade unused statements
           folding: false, //* Collapse left margin of the lines
           lineNumbersMinChars: 3, //* Decrease right side of the line number
           fontSize: 18, //* font size
           scrollBeyondLastLine: false,
           automaticLayout: true, //* Auto adjust for resizing
           tabSize: 2, //* Tab size inside editor
+          lineHeight: 30, //* Line height
         }}
       />
     </div>
