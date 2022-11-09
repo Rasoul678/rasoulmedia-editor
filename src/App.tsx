@@ -7,10 +7,10 @@ import {
   useState,
   useTransition,
 } from "react";
-import "./App.css";
 import { fetchPlugin } from "./plugins/fetch-plugin";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import CodeEditor from "./components/code-editor";
+import "bulmaswatch/nuclear/bulmaswatch.min.css";
 
 const App = () => {
   const serviceRef = useRef(false);
