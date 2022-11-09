@@ -3,6 +3,7 @@ import MonacoEditor, { OnChange, OnMount } from "@monaco-editor/react";
 import monaco from "monaco-editor/esm/vs/editor/editor.api";
 import prettier from "prettier";
 import parser from "prettier/parser-babel";
+import editorStyle from "./code-editor.module.css";
 
 interface IProps extends PropsWithChildren {
   defaultValue: string;
@@ -36,7 +37,7 @@ const CodeEditor: React.FC<IProps> = (props) => {
         useTabs: false,
         singleQuote: false,
         semi: true,
-      });
+      }).replace(/\n$/, '');
 
       //* Set formatted value back in the editor
       editorRef.current?.setValue(formatted);
@@ -44,8 +45,11 @@ const CodeEditor: React.FC<IProps> = (props) => {
   };
 
   return (
-    <div>
-      <button className="button is-warning is-small" onClick={onClickFormat}>
+    <div className={editorStyle.editorWrapper}>
+      <button
+        className={`button is-warning is-small ${editorStyle.formatterButton}`}
+        onClick={onClickFormat}
+      >
         Format
       </button>
       <MonacoEditor
