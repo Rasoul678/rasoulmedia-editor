@@ -1,94 +1,20 @@
-import esbuild from "esbuild-wasm";
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
-import { fetchPlugin } from "./plugins/fetch-plugin";
-import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
+import { useCallback, useState } from "react";
 import CodeEditor from "./components/code-editor/code-editor";
 import "bulmaswatch/nuclear/bulmaswatch.min.css";
+import Preview from "./components/preview/preview";
+import bundler from "./bundler";
 
 const App = () => {
-  const serviceRef = useRef(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const id = useId();
   const [input, setInput] = useState("");
-  const [, startTransition] = useTransition();
-
-  const startService = async () => {
-    await esbuild.initialize({
-      worker: true,
-      wasmURL: "https://unpkg.com/esbuild-wasm/esbuild.wasm",
-    });
-  };
-
-  useEffect(() => {
-    if (!serviceRef.current) {
-      try {
-        startService();
-        serviceRef.current = true;
-      } catch (error) {
-        throw error;
-      }
-    }
-  }, []);
+  const [code, setCode] = useState("");
 
   const handleClick = async () => {
-    if (!serviceRef.current) return;
-
-    iframeRef.current!.srcdoc = html;
-
-    const result = await esbuild.build({
-      entryPoints: ["index.js"],
-      bundle: true,
-      write: false,
-      define: {
-        "process.env.NODE_ENV": '"production"',
-        global: "window",
-      },
-      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
-    });
-
-    iframeRef.current!.contentWindow!.postMessage(
-      result.outputFiles[0].text,
-      "*"
-    );
+    const output = await bundler(input);
+    setCode(output);
   };
 
-  const html = `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>MeBox</title>
-      </head>
-      <body>
-        <div id="root"></div>
-        <script>
-          window.addEventListener("message", (event) => {
-            try{
-              eval(event.data);
-            } catch(error){
-              const root = document.querySelector('#root');
-              root.innerHTML = '<div style="color: crimson;"><h4>Runtime Error:</h4>' + error + '</div>';
-              console.error(error);
-            }
-          }, false);
-        </script>
-      </body>
-    </html>
-  `;
-
-  const handleChangeEditor = useCallback((value: string) => {
-    startTransition(() => {
-      setInput(value);
-    });
+  const handleChangeEditor = useCallback((input: string) => {
+    setInput(input);
   }, []);
 
   return (
@@ -111,13 +37,7 @@ const App = () => {
         <div>
           <button onClick={handleClick}>Submit</button>
         </div>
-        <iframe
-          style={{ backgroundColor: "white" }}
-          ref={iframeRef}
-          title={`preview-${id}`}
-          sandbox="allow-scripts"
-          srcDoc={html}
-        />
+        <Preview code={code} />
       </header>
     </div>
   );
