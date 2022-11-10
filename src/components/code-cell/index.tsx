@@ -19,7 +19,16 @@ const CodeCell = () => {
   return (
     <div>
       <CodeEditor
-        defaultValue={`console.log(123);`}
+        defaultValue={`
+        import React from 'react'
+        import {createRoot} from 'react-dom'
+        
+        const rootElement = document.querySelector('#root');
+        const root = createRoot(rootElement);
+        
+        const App = () => <h1>Hello!</h1>;
+        root.render(<App />)
+        `}
         onChange={handleChangeEditor}
       />
       <div>
