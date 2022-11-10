@@ -9,7 +9,7 @@ import {
 } from "react";
 import { fetchPlugin } from "./plugins/fetch-plugin";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
-import CodeEditor from "./components/code-editor";
+import CodeEditor from "./components/code-editor/code-editor";
 import "bulmaswatch/nuclear/bulmaswatch.min.css";
 
 const App = () => {
@@ -94,8 +94,7 @@ const App = () => {
   return (
     <div>
       <CodeEditor
-        defaultValue={
-          `// Some comments
+        defaultValue={`// Some comments
           import React from 'react';
           import {createRoot} from 'react-dom';
 
@@ -113,6 +112,7 @@ const App = () => {
           <button onClick={handleClick}>Submit</button>
         </div>
         <iframe
+          style={{ backgroundColor: "white" }}
           ref={iframeRef}
           title={`preview-${id}`}
           sandbox="allow-scripts"

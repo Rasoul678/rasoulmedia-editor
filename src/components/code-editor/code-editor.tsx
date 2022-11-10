@@ -1,7 +1,7 @@
 import "./editor-syntax.css";
 import editorStyle from "./code-editor.module.css";
-import React, { PropsWithChildren, useCallback, useRef } from "react";
-import MonacoEditor, { OnChange, OnMount } from "@monaco-editor/react";
+import React, { memo, PropsWithChildren, useCallback, useRef } from "react";
+import MonacoEditor, { OnMount } from "@monaco-editor/react";
 import monaco from "monaco-editor/esm/vs/editor/editor.api";
 import prettier from "prettier";
 import parser from "prettier/parser-babel";
@@ -44,25 +44,20 @@ const CodeEditor: React.FC<IProps> = (props) => {
 
       //* init highlight
       highlighter();
-      formatCode(defaultValue);
 
       editor.onDidChangeModelContent(() => {
         //* content change, highlight
         highlighter();
+
+        //* content change, build
+        const value = editor.getValue();
+        onChange?.(value);
       });
 
+      formatCode(defaultValue);
       return dispose;
     },
-    [defaultValue]
-  );
-
-  const handleEditorChange: OnChange = useCallback(
-    (value, _event) => {
-      if (value) {
-        onChange?.(value);
-      }
-    },
-    [onChange]
+    [defaultValue, onChange]
   );
 
   const formatCode = (unformatted: string | undefined) => {
@@ -106,7 +101,6 @@ const CodeEditor: React.FC<IProps> = (props) => {
         theme="vs-dark"
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
-        onChange={handleEditorChange}
         options={{
           wordWrap: "on", //* Make word to  wrap
           minimap: {
@@ -126,4 +120,4 @@ const CodeEditor: React.FC<IProps> = (props) => {
   );
 };
 
-export default CodeEditor;
+export default memo(CodeEditor);
