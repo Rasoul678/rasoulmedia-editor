@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CodeEditor from "../code-editor";
 import Preview from "../preview";
 import bundler from "../../bundler";
@@ -9,10 +9,16 @@ const CodeCell = () => {
   const [input, setInput] = useState("");
   const [code, setCode] = useState("");
 
-  const handleClick = async () => {
-    const output = await bundler(input);
-    setCode(output);
-  };
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const output = await bundler(input);
+      setCode(output);
+    }, 700);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [input]);
 
   const handleChangeEditor = useCallback((input: string) => {
     setInput(input);
@@ -36,9 +42,6 @@ const CodeCell = () => {
             onChange={handleChangeEditor}
           />
         </ResizableBox>
-        <div>
-          <button onClick={handleClick}>Submit</button>
-        </div>
         <Preview code={code} />
       </div>
     </ResizableBox>
