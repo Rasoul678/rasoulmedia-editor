@@ -7,12 +7,12 @@ import style from "./code-cell.module.css";
 
 const CodeCell = () => {
   const [input, setInput] = useState("");
-  const [code, setCode] = useState("");
+  const [preview, setPreview] = useState({ code: "", err: "" });
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const output = await bundler(input);
-      setCode(output);
+      setPreview(output);
     }, 700);
 
     return () => {
@@ -42,7 +42,7 @@ const CodeCell = () => {
             onChange={handleChangeEditor}
           />
         </ResizableBox>
-        <Preview code={code} />
+        <Preview preview={preview} />
       </div>
     </ResizableBox>
   );

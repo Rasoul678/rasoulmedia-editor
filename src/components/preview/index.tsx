@@ -1,15 +1,22 @@
 import React, { memo, useEffect, useId, useRef } from "react";
 import { IFRAME_SRCDOC } from "../../constant";
+import style from "./preview.module.css";
 
 interface IProps {
-  code: string;
+  preview: {
+    code: string;
+    err: string;
+  };
 }
 
-const Preview: React.FC<IProps> = ({ code }) => {
+const Preview: React.FC<IProps> = (props) => {
+  const { code, err } = props.preview;
   const id = useId();
   const ref = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
+    if (err) return;
+
     ref.current!.srcdoc = IFRAME_SRCDOC;
 
     //* Because it takes time to sets iframe's srcDoc,
@@ -17,7 +24,15 @@ const Preview: React.FC<IProps> = ({ code }) => {
     setTimeout(() => {
       ref.current!.contentWindow!.postMessage(code, "*");
     }, 50);
-  }, [code]);
+  }, [code, err]);
+
+  if (err) {
+    return (
+      <div className={style.preview__error}>
+        <b>Compile Error:</b> <br /> {err}
+      </div>
+    );
+  }
 
   return (
     <iframe
@@ -25,7 +40,7 @@ const Preview: React.FC<IProps> = ({ code }) => {
       title={`preview-${id}`}
       sandbox="allow-scripts"
       srcDoc={IFRAME_SRCDOC}
-      style={{ width: "100%", backgroundColor: "white" }}
+      className={style.preview__iframe}
     />
   );
 };

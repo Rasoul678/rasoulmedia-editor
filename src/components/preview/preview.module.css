@@ -1,0 +1,11 @@
+.preview__iframe {
+  width: 100%;
+  background-color: white;
+}
+
+.preview__error {
+  background-color: white;
+  width: 100%;
+  padding: 1rem;
+  color: crimson;
+}

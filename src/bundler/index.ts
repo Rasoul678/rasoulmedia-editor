@@ -21,18 +21,28 @@ const bundler = async (rawCode: string) => {
     }
   }
 
-  const result = await esbuild.build({
-    entryPoints: ["index.js"],
-    bundle: true,
-    write: false,
-    define: {
-      "process.env.NODE_ENV": '"production"',
-      global: "window",
-    },
-    plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
-  });
+  try {
+    const result = await esbuild.build({
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      define: {
+        "process.env.NODE_ENV": '"production"',
+        global: "window",
+      },
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+    });
 
-  return result.outputFiles[0].text;
+    return {
+      code: result.outputFiles[0].text,
+      err: "",
+    };
+  } catch (error) {
+    return {
+      code: "",
+      err: (error as Error).message,
+    };
+  }
 };
 
 export default bundler;
