@@ -27,7 +27,7 @@ const ResizableBox: React.FC<IProps> = (props) => {
         ...(direction === "horizontal" ? { right: true } : { bottom: true }),
       }}
       minHeight="10vh"
-      maxHeight="90vh"
+      maxHeight="80vh"
     >
       {children}
     </Resizable>

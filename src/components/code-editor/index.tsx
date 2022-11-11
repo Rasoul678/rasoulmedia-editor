@@ -1,6 +1,6 @@
 import "./editor-syntax.css";
 import editorStyle from "./code-editor.module.css";
-import React, { memo, PropsWithChildren, useCallback, useRef } from "react";
+import React, { memo, PropsWithChildren, useCallback, useId, useRef } from "react";
 import MonacoEditor, { OnMount } from "@monaco-editor/react";
 import monaco from "monaco-editor/esm/vs/editor/editor.api";
 import prettier from "prettier";
@@ -17,6 +17,7 @@ interface IProps extends PropsWithChildren {
 
 const CodeEditor: React.FC<IProps> = (props) => {
   const { defaultValue, onChange } = props;
+  const id= useId();
 
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
@@ -97,7 +98,7 @@ const CodeEditor: React.FC<IProps> = (props) => {
         className={"editor"}
         height="100%"
         language="javascript"
-        path={"file:///index.tsx"}
+        path={`file:///${id}-index.tsx`}
         theme="vs-dark"
         defaultValue={defaultValue}
         onMount={handleEditorDidMount}
