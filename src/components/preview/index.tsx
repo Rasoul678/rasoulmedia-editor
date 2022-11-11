@@ -25,6 +25,7 @@ const Preview: React.FC<IProps> = ({ code }) => {
       title={`preview-${id}`}
       sandbox="allow-scripts"
       srcDoc={IFRAME_SRCDOC}
+      style={{ width: "100%", backgroundColor: "white" }}
     />
   );
 };

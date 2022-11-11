@@ -95,7 +95,7 @@ const CodeEditor: React.FC<IProps> = (props) => {
       </button>
       <MonacoEditor
         className={"editor"}
-        height="80vh"
+        height="100%"
         language="javascript"
         path={"file:///index.tsx"}
         theme="vs-dark"
@@ -110,7 +110,7 @@ const CodeEditor: React.FC<IProps> = (props) => {
           folding: false, //* Collapse left margin of the lines
           lineNumbersMinChars: 3, //* Decrease right side of the line number
           fontSize: 18, //* font size
-          scrollBeyondLastLine: false,
+          scrollBeyondLastLine: true,
           automaticLayout: true, //* Auto adjust for resizing
           tabSize: 2, //* Tab size inside editor
           lineHeight: 30, //* Line height

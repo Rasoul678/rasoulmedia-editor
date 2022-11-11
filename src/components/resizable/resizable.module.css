@@ -1,0 +1,44 @@
+.resizable__Hhandle {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  background-color: #333;
+  top: 0.25rem;
+  height: 0.7rem;
+  line-height: 2rem;
+  font-size: 2.5rem;
+}
+
+.resizable__Vhandle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  left: 0rem;
+  height: 100%;
+  width: 0.6rem;
+  font-size: 2.5rem;
+}
+
+.resizable__Vhandle span {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+}
+
+.resizable__Vhandle div {
+  height: 0.8rem;
+}
+
+/* .resizable__Vhandle span::after {
+  content: ".";
+}
+
+.resizable__Hhandle span::after {
+  content: ".";
+} */

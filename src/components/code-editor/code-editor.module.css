@@ -1,6 +1,7 @@
 .editorWrapper {
   position: relative;
   height: 100%;
+  width: 100%;
 }
 
 .formatterButton {
@@ -13,5 +14,5 @@
 }
 
 .editorWrapper:hover .formatterButton {
-    opacity: 1;
+  opacity: 1;
 }
