@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import MDEditor, { MDEditorProps } from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
-import useOnClickOutside from "../../hooks/useOnClickOutside";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 import "./markdown.css";
 
 interface IProps {}
