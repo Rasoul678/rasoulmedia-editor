@@ -1,0 +1,21 @@
+.w-md-editor-bar {
+  bottom: -0.6rem !important;
+  width: 100%;
+  background-color: #333;
+}
+
+.w-md-editor-bar svg {
+  display: none;
+}
+
+.w-md-editor-bar::after {
+  content: "...";
+  font-size: 2.5rem;
+  position: relative;
+  top: -2.3rem;
+  left: calc(50% - 1rem);
+}
+
+.card-content {
+  background-color: #0d1117;
+}
