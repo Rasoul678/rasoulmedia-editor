@@ -41,10 +41,10 @@ export const cellsReducer = createReducer(initialState, (builder) => {
     .addCase(deleteCell, (state, action) => {
       const deletingCellID = action.payload;
 
+      //* delete from order array
+      state.order = state.order.filter((id) => id !== deletingCellID);
       //* delete from object
       delete state.data[deletingCellID];
-      //* delete from order array
-      state.order.filter((id) => id !== deletingCellID);
     })
     .addCase(moveCell, (state, action) => {
       const { id, direction } = action.payload;

@@ -12,7 +12,7 @@ const style: CSSProperties = {
   gap: "0.2rem",
   margin: "0.2rem",
   zIndex: "10",
-  opacity: 0.8,
+  opacity: 1,
 };
 
 interface IProps {
@@ -24,7 +24,7 @@ const CellListItem: React.FC<IProps> = ({ cell }) => {
     <div style={{ position: "relative", marginBottom: "2.5rem" }}>
       {cell.type === "code" ? (
         <>
-          <div style={{ ...style, top: "-2rem" }}>
+          <div style={{ ...style, top: "-1.5rem" }}>
             <ActionBar id={cell.id} />
           </div>
           <CodeCell cell={cell} />

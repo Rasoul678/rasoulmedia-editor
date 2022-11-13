@@ -1,5 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
+import AddCell from "../add-cell";
 import CellListItem from "../cell-list-item";
 
 interface IProps {}
@@ -12,8 +13,12 @@ const CellList: React.FC<IProps> = (props) => {
   return (
     <div>
       {cells.map((cell) => (
-        <CellListItem key={cell.id} cell={cell} />
+        <Fragment key={cell.id}>
+          <AddCell nextCellID={cell.id} />
+          <CellListItem cell={cell} />
+        </Fragment>
       ))}
+      <AddCell />
     </div>
   );
 };
