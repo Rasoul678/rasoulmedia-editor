@@ -3,18 +3,23 @@ import MDEditor, { MDEditorProps } from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
 import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 import "./markdown.css";
+import { Cell } from "../../state/action-creators";
+import { useAction } from "../../hooks/useAction";
 
-interface IProps {}
+interface IProps {
+  cell: Cell;
+}
 
-const MarkdownEditor: React.FC<IProps> = (props) => {
+const MarkdownEditor: React.FC<IProps> = ({ cell: { content, id } }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState("# Hello world!!!");
+
+  const { updateCell } = useAction();
 
   useOnClickOutside(ref, () => setIsEditing(false));
 
   const handleChangeText: MDEditorProps["onChange"] = (value) => {
-    setValue(value || "");
+    updateCell(value || "", id);
   };
 
   return (
@@ -22,7 +27,7 @@ const MarkdownEditor: React.FC<IProps> = (props) => {
       {isEditing && (
         <div ref={ref}>
           <MDEditor
-            value={value}
+            value={content}
             onChange={handleChangeText}
             previewOptions={{
               rehypePlugins: [[rehypeSanitize]],
@@ -35,7 +40,7 @@ const MarkdownEditor: React.FC<IProps> = (props) => {
         <div className="card" onClick={() => setIsEditing(true)}>
           <div className="card-content">
             <MDEditor.Markdown
-              source={value}
+              source={content || 'Click to edit!'}
               style={{ whiteSpace: "pre-wrap" }}
             />
           </div>

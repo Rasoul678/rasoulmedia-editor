@@ -1,6 +1,12 @@
 import "./editor-syntax.css";
 import editorStyle from "./code-editor.module.css";
-import React, { memo, PropsWithChildren, useCallback, useId, useRef } from "react";
+import React, {
+  memo,
+  PropsWithChildren,
+  useCallback,
+  useId,
+  useRef,
+} from "react";
 import MonacoEditor, { OnMount } from "@monaco-editor/react";
 import monaco from "monaco-editor/esm/vs/editor/editor.api";
 import prettier from "prettier";
@@ -9,6 +15,7 @@ import {
   MonacoJsxSyntaxHighlight,
   getWorker,
 } from "monaco-jsx-syntax-highlight";
+import Prettier from "../icons/Prettier";
 
 interface IProps extends PropsWithChildren {
   defaultValue: string;
@@ -17,7 +24,7 @@ interface IProps extends PropsWithChildren {
 
 const CodeEditor: React.FC<IProps> = (props) => {
   const { defaultValue, onChange } = props;
-  const id= useId();
+  const id = useId();
 
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
@@ -88,12 +95,12 @@ const CodeEditor: React.FC<IProps> = (props) => {
 
   return (
     <div className={editorStyle.editorWrapper}>
-      <button
-        className={`button is-warning is-small ${editorStyle.formatterButton}`}
+      <div
+        className={`${editorStyle.formatterButton}`}
         onClick={onClickFormat}
       >
-        Format
-      </button>
+        <Prettier />
+      </div>
       <MonacoEditor
         className={"editor"}
         height="100%"

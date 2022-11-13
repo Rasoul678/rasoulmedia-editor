@@ -25,6 +25,7 @@
     "re-resizable": "^6.9.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.6.0",
     "react-redux": "^8.0.5",
     "react-resizable": "^3.0.4",
     "react-scripts": "5.0.1",

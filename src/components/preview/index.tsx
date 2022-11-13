@@ -3,14 +3,11 @@ import { IFRAME_SRCDOC } from "../../constant";
 import style from "./preview.module.css";
 
 interface IProps {
-  preview: {
-    code: string;
-    err: string;
-  };
+  code: string;
+  err: string;
 }
 
-const Preview: React.FC<IProps> = (props) => {
-  const { code, err } = props.preview;
+const Preview: React.FC<IProps> = ({ code, err }) => {
   const id = useId();
   const ref = useRef<HTMLIFrameElement>(null);
 
