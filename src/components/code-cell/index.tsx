@@ -6,6 +6,7 @@ import style from "./code-cell.module.css";
 import { Cell } from "../../state/action-creators";
 import { useAction } from "../../hooks/useAction";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
+import ProgressBar from "../progress-bar";
 
 interface IProps {
   cell: Cell;
@@ -17,6 +18,11 @@ const CodeCell: React.FC<IProps> = ({ cell }) => {
   const bundle = useTypedSelector((state) => state.bundles[id]);
 
   useEffect(() => {
+    if (!bundle) {
+      createBundle({ id, input: cell.content });
+
+      return;
+    }
     const timer = setTimeout(async () => {
       createBundle({ id, input: cell.content });
     }, 600);
@@ -24,6 +30,7 @@ const CodeCell: React.FC<IProps> = ({ cell }) => {
     return () => {
       clearTimeout(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cell.content, id, createBundle]);
 
   return (
@@ -35,7 +42,11 @@ const CodeCell: React.FC<IProps> = ({ cell }) => {
             onChange={(value) => updateCell(value, id)}
           />
         </ResizableBox>
-        {bundle && <Preview code={bundle.code} err={bundle.error} />}
+        {!bundle || bundle.bundling ? (
+          <ProgressBar />
+        ) : (
+          <Preview code={bundle.code} err={bundle.error} />
+        )}
       </div>
     </ResizableBox>
   );
