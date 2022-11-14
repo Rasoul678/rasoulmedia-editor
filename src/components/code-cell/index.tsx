@@ -1,34 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CodeEditor from "../code-editor";
 import Preview from "../preview";
-import bundler from "../../bundler";
 import ResizableBox from "../resizable";
 import style from "./code-cell.module.css";
 import { Cell } from "../../state/action-creators";
 import { useAction } from "../../hooks/useAction";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 
 interface IProps {
   cell: Cell;
 }
 
 const CodeCell: React.FC<IProps> = ({ cell }) => {
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
-  const { updateCell } = useAction();
-
   const { content, id } = cell;
+  const { updateCell, createBundle } = useAction();
+  const bundle = useTypedSelector((state) => state.bundles[id]);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
-      const output = await bundler(cell.content);
-      setError(output.err);
-      setCode(output.code);
-    }, 700);
+      createBundle({ id, input: cell.content });
+    }, 600);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [cell.content]);
+  }, [cell.content, id, createBundle]);
 
   return (
     <ResizableBox direction="vertical">
@@ -39,7 +35,7 @@ const CodeCell: React.FC<IProps> = ({ cell }) => {
             onChange={(value) => updateCell(value, id)}
           />
         </ResizableBox>
-        <Preview code={code} err={error} />
+        {bundle && <Preview code={bundle.code} err={bundle.error} />}
       </div>
     </ResizableBox>
   );

@@ -6,7 +6,7 @@ import CellListItem from "../cell-list-item";
 interface IProps {}
 
 const CellList: React.FC<IProps> = (props) => {
-  const cells = useTypedSelector(({ cellsReducer: { order, data } }) => {
+  const cells = useTypedSelector(({ cells: { order, data } }) => {
     return order.map((id) => data[id]);
   });
 
