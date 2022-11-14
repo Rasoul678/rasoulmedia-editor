@@ -4,7 +4,7 @@
   transition: opacity 0.2s ease-in-out 0.2s;
 }
 
-.addList:not(:last-child) {
+.addList:not(:first-child) {
   opacity: 0;
 }
 
@@ -23,7 +23,7 @@
 
 .divider {
   position: absolute;
-  border: 1px solid #fff;
+  border: 1px solid #aaa;
   top: -0.5rem;
   width: 100%;
 }

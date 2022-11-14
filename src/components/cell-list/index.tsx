@@ -12,13 +12,13 @@ const CellList: React.FC<IProps> = (props) => {
 
   return (
     <div>
+      <AddCell />
       {cells.map((cell) => (
         <Fragment key={cell.id}>
-          <AddCell nextCellID={cell.id} />
           <CellListItem cell={cell} />
+          <AddCell previousCellID={cell.id} />
         </Fragment>
       ))}
-      <AddCell />
     </div>
   );
 };

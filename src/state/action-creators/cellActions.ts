@@ -12,8 +12,8 @@ export interface Cell {
   updatedAt: string | null;
 }
 
-export const insertCellBefore = createAction(
-  ActionType.INSERT_CELL_BEFORE,
+export const insertCellAfter = createAction(
+  ActionType.INSERT_CELL_AFTER,
   function prepare(type: CellTypes, id: string | null = null) {
     const cell: Cell = {
       id: nanoid(),

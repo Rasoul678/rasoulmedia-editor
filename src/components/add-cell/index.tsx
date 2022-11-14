@@ -1,13 +1,14 @@
 import React from "react";
 import { useAction } from "../../hooks/useAction";
+import Plus from "../icons/Plus";
 import style from "./add-cell.module.css";
 
 interface IProps {
-  nextCellID?: string | null;
+  previousCellID?: string | null;
 }
 
-const AddCell: React.FC<IProps> = ({ nextCellID = null }) => {
-  const { insertCellBefore } = useAction();
+const AddCell: React.FC<IProps> = ({ previousCellID = null }) => {
+  const { insertCellAfter } = useAction();
 
   return (
     <div className={style.addList}>
@@ -15,16 +16,16 @@ const AddCell: React.FC<IProps> = ({ nextCellID = null }) => {
         <button
           title="add code"
           className="button is-primary is-rounded is-small"
-          onClick={() => insertCellBefore("code", nextCellID)}
+          onClick={() => insertCellAfter("code", previousCellID)}
         >
-          Code
+          <Plus /> Code
         </button>
         <button
           title="add text"
           className="button is-primary is-rounded is-small"
-          onClick={() => insertCellBefore("text", nextCellID)}
+          onClick={() => insertCellAfter("text", previousCellID)}
         >
-          Text
+          <Plus /> Text
         </button>
       </div>
       <div className={style.divider}></div>

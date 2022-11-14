@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  insertCellBefore,
+  insertCellAfter,
   Cell,
   deleteCell,
   moveCell,
@@ -25,7 +25,7 @@ const initialState: CellsState = {
 
 export const cellsReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(insertCellBefore, (state, action) => {
+    .addCase(insertCellAfter, (state, action) => {
       const { cell, targetID } = action.payload;
 
       state.data[cell.id] = cell;
@@ -33,9 +33,9 @@ export const cellsReducer = createReducer(initialState, (builder) => {
       const index = state.order.findIndex((id) => id === targetID);
 
       if (index === -1) {
-        state.order.push(cell.id);
+        state.order.unshift(cell.id);
       } else {
-        state.order.splice(index, 0, cell.id);
+        state.order.splice(index + 1, 0, cell.id);
       }
     })
     .addCase(deleteCell, (state, action) => {
