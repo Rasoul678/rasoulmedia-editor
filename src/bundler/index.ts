@@ -13,6 +13,8 @@ const bundler = async (rawCode: string) => {
         global: "window",
       },
       plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+      jsxFactory: "_React.createElement",
+      jsxFragment: "_React.Fragment",
     });
 
     return {
