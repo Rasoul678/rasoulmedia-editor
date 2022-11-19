@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/code-editor/static/css/main.7e2f384f.css",
+    "main.js": "/code-editor/static/js/main.fba2cad8.js",
+    "static/js/787.9c339605.chunk.js": "/code-editor/static/js/787.9c339605.chunk.js",
+    "index.html": "/code-editor/index.html",
+    "main.7e2f384f.css.map": "/code-editor/static/css/main.7e2f384f.css.map",
+    "main.fba2cad8.js.map": "/code-editor/static/js/main.fba2cad8.js.map",
+    "787.9c339605.chunk.js.map": "/code-editor/static/js/787.9c339605.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7e2f384f.css",
+    "static/js/main.fba2cad8.js"
+  ]
+}
