@@ -7,7 +7,7 @@ export const useBundlerService = () => {
   const startService = async () => {
     await esbuild.initialize({
       worker: true,
-      wasmURL: "/esbuild.wasm",
+      wasmURL: "https://unpkg.com/esbuild-wasm@0.15.15/esbuild.wasm",
     });
   };
 
