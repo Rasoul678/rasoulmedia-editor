@@ -4,7 +4,7 @@ import rehypeSanitize from "rehype-sanitize";
 import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 import "./markdown.css";
 import { Cell } from "../../state/action-creators";
-import { useAction } from "../../hooks/useAction";
+import { useStore } from "store/store";
 
 interface IProps {
   cell: Cell;
@@ -14,12 +14,12 @@ const MarkdownEditor: React.FC<IProps> = ({ cell: { content, id } }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { updateCell } = useAction();
+  const { actions } = useStore();
 
   useOnClickOutside(ref, () => setIsEditing(false));
 
   const handleChangeText: MDEditorProps["onChange"] = (value) => {
-    updateCell(value || "", id);
+    actions.updateCell(value || "", id);
   };
 
   return (

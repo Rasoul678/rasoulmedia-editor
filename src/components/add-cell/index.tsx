@@ -1,14 +1,15 @@
 import React from "react";
-import { useAction } from "../../hooks/useAction";
 import Plus from "../icons/Plus";
 import style from "./add-cell.module.css";
+import { useStore } from "store/store";
+
 
 interface IProps {
   previousCellID?: string | null;
 }
 
 const AddCell: React.FC<IProps> = ({ previousCellID = null }) => {
-  const { insertCellAfter } = useAction();
+  const { actions } = useStore();
 
   return (
     <div className={style.addList}>
@@ -16,14 +17,14 @@ const AddCell: React.FC<IProps> = ({ previousCellID = null }) => {
         <button
           title="add code"
           className="button is-primary is-rounded is-small"
-          onClick={() => insertCellAfter("code", previousCellID)}
+          onClick={() => actions.insertCellAfter("code", previousCellID)}
         >
           <Plus /> Code
         </button>
         <button
           title="add text"
           className="button is-primary is-rounded is-small"
-          onClick={() => insertCellAfter("text", previousCellID)}
+          onClick={() => actions.insertCellAfter("text", previousCellID)}
         >
           <Plus /> Text
         </button>

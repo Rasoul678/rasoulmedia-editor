@@ -4,10 +4,9 @@ import Preview from "../preview";
 import ResizableBox from "../resizable";
 import style from "./code-cell.module.css";
 import { Cell } from "../../state/action-creators";
-import { useAction } from "../../hooks/useAction";
-import { useTypedSelector } from "../../hooks/useTypedSelector";
 import ProgressBar from "../progress-bar";
 import { useCumulativeCode } from "../../hooks/useCumulativeCode";
+import { useStore } from "store/store";
 
 interface IProps {
   cell: Cell;
@@ -15,8 +14,11 @@ interface IProps {
 
 const CodeCell: React.FC<IProps> = ({ cell }) => {
   const { content, id } = cell;
-  const { updateCell, createBundle } = useAction();
-  const bundle = useTypedSelector((state) => state.bundles[id]);
+  const { actions, store } = useStore();
+
+  const { updateCell, createBundle } = actions;
+  const bundle = store.bundles[id];
+
   const cumulativeCode = useCumulativeCode(cell.id);
 
   useEffect(() => {
