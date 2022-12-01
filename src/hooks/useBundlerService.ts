@@ -1,13 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import esbuild from "esbuild-wasm";
 
 export const useBundlerService = () => {
   const serviceRef = useRef(false);
+  const [isReady, setIsReady] = useState(false);
 
   const startService = async () => {
     await esbuild.initialize({
       worker: true,
-      wasmURL: "https://unpkg.com/esbuild-wasm@0.15.15/esbuild.wasm",
+      wasmURL: "https://unpkg.com/esbuild-wasm@0.15.16/esbuild.wasm",
     });
   };
 
@@ -16,9 +17,12 @@ export const useBundlerService = () => {
       try {
         startService();
         serviceRef.current = true;
+        setIsReady(true);
       } catch (error) {
         throw error;
       }
     }
   }, []);
+
+  return isReady;
 };

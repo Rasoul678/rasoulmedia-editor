@@ -2,13 +2,15 @@ import "bulmaswatch/cyborg/bulmaswatch.min.css";
 import CellList from "./components/cell-list";
 import { useBundlerService } from "./hooks/useBundlerService";
 
+const InitAppMessage = () => <div className="Init__App">Initializing App...</div>;
+
 const App = () => {
   //* initialize bundler
-  useBundlerService();
+  const isReady = useBundlerService();
 
   return (
     <div style={{ margin: "3rem 1rem" }}>
-      <CellList />
+      {isReady ? <CellList /> : <InitAppMessage />}
     </div>
   );
 };

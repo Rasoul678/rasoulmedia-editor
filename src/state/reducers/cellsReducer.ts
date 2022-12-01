@@ -28,6 +28,10 @@ export const cellsReducer = createReducer(initialState, (builder) => {
     .addCase(insertCellAfter, (state, action) => {
       const { cell, targetID } = action.payload;
 
+      if(cell.type === 'code'){
+        cell.content = `// Use "show()" to display something! 🤩 \n // e.g: show(<div>Hello World!</div>)`
+      }
+
       state.data[cell.id] = cell;
 
       const index = state.order.findIndex((id) => id === targetID);
