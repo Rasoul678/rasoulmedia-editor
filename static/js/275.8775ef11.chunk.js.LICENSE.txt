@@ -1,0 +1,1 @@
+//! Do nothing if clicking ref's element or descendent elements
